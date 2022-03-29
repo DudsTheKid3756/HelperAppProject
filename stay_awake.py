@@ -135,7 +135,7 @@ def end_chat(hour=18) -> int:
     return 1
 
 
-def stay_awake():
+def stay_awake() -> int or None:
     """main script to move mouse if inactive for more than 3 minutes"""
     x = 0
     first_pos: tuple[int, int] = mouse.get_position()
@@ -143,8 +143,9 @@ def stay_awake():
         for _ in range(60):
             end: int = end_chat()
             keyboard.on_press_key('end', lambda _: state.append(0))
-            if state.count(0) > 0 or end == 0:
-                state.append(0)
+            if end == 0:
+                return 0
+            if state.count(0) > 0:
                 return
             time.sleep(1)
         x += 1
@@ -166,10 +167,12 @@ while True:
         response = 'no'
 
     is_live = True if response.lower().startswith('y') else False
+    z: int or None = None
     time.sleep(3)
     if is_live:
         while state.count(0) == 0:
-            stay_awake()
+            z = stay_awake()
+        if z is None:
             end_response = get_end_response()
             if end_response == "End Call":
                 end_chat(datetime.now().hour)
