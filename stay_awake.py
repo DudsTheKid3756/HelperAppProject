@@ -101,12 +101,6 @@ def change_tabs(x: int, y: int) -> None:
     press_key(meet_tab)
 
 
-def get_end_response() -> str:
-    return easygui.buttonbox(
-        "Do you want to end the program or end the call?",
-        "HelperApp", ["End Program", "End Call"])
-
-
 def end_chat(hour=18) -> int:
     """
     - checks if current time is 6 or is equal to time arg
@@ -146,7 +140,7 @@ def stay_awake() -> int or None:
             if end == 0:
                 return 0
             if state.count(0) > 0:
-                return
+                return 1
             time.sleep(1)
         x += 1
     sec_pos: tuple[int, int] = mouse.get_position()
@@ -167,15 +161,22 @@ while True:
         response = 'no'
 
     is_live = True if response.lower().startswith('y') else False
-    z: int or None = None
     time.sleep(3)
     if is_live:
         while state.count(0) == 0:
-            z = stay_awake()
-        if z is None:
-            end_response = get_end_response()
-            if end_response == "End Call":
-                end_chat(datetime.now().hour)
+            z: int or None = stay_awake()
+            if z == 1:
+                end_response = easygui.buttonbox(
+                    "Do you want to end the program or end the call?",
+                    "HelperApp", ["End Program", "End Call", "Cancel"])
+                if end_response == "End Call":
+                    end_chat(datetime.now().hour)
+                elif end_response == "End Program":
+                    pass
+                else:
+                    state.clear()
+            elif z == 0:
+                state.append(0)
         print("Exiting program")
         time.sleep(2)
         if datetime.now().hour > 17:
