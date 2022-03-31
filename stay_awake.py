@@ -19,6 +19,7 @@ file_paths = {
     "messages": f"C:/Users/{user}/Desktop/messages",
     "scripts": f"C:/Users/{user}/Desktop/exit_scripts"
 }
+custom_message: str = ""
 
 pyautogui.FAILSAFE = False
 num_min = 0
@@ -107,6 +108,7 @@ def end_chat(hour=18) -> int:
     - if equal checks current Chrome tab id and sets win_num to id if current tab is 24/7 meet
     - checks monitor config and executes exit script based on config
     """
+    global custom_message
     if datetime.now().hour >= hour:
         e = exec_list_items
         win_num = 0
@@ -114,6 +116,17 @@ def end_chat(hour=18) -> int:
             win_num = find_windows(best_match="Meet - New Hire 24/7 Meet")
         except pywinauto.findbestmatch.MatchError:
             pass
+
+        custom_message_response = easygui.buttonbox(
+            "Would you like to use a custom message?",
+            "Helper App", ["Custom Message", "Default Messages"])
+        time.sleep(1)
+        
+        if custom_message_response == "Custom Message":
+            custom_message = str(easygui.enterbox(
+                "Enter your custom message here:",
+                "Custom Message"))
+        time.sleep(2)
 
         if len(screeninfo.get_monitors()) == 1:
             if win_num == 0:
