@@ -121,7 +121,7 @@ def end_chat(hour=18) -> int:
             "Would you like to use a custom message?",
             "Helper App", ["Custom Message", "Default Messages"])
         time.sleep(1)
-        
+
         if custom_message_response == "Custom Message":
             custom_message = str(easygui.enterbox(
                 "Enter your custom message here:",
