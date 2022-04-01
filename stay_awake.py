@@ -20,6 +20,7 @@ file_paths = {
     "scripts": f"C:/Users/{user}/Desktop/exit_scripts"
 }
 custom_message: str = ""
+set_hour: int = 18  # default value for time to close chat
 
 pyautogui.FAILSAFE = False
 num_min = 0
@@ -63,7 +64,7 @@ one_monitor: list[str] = monitors[0]
 two_monitors: list[str] = monitors[1]
 
 
-def exec_list_items(_list: list[str]):
+def exec_list_items(_list: list[str]) -> None:
     """executes command strings from list from txt file"""
     for item in _list:
         exec(item)
@@ -102,7 +103,18 @@ def change_tabs(x: int, y: int) -> None:
     press_key(meet_tab)
 
 
-def end_chat(hour=18) -> int:
+def set_close_schedule() -> None:
+    """callback func to change hour that chat ends"""
+    global set_hour
+    hour: int = easygui.integerbox(
+        "Input a time to end Google Meet (in hours):",
+        "Helper App", 18, 0, 24
+    )
+    if hour is not None:
+        set_hour = hour
+
+
+def end_chat(hour=set_hour) -> int:
     """
     - checks if current time is 6 or is equal to time arg
     - if equal checks current Chrome tab id and sets win_num to id if current tab is 24/7 meet
@@ -150,10 +162,13 @@ def stay_awake() -> int or None:
         for _ in range(60):
             end: int = end_chat()
             keyboard.on_press_key('end', lambda _: state.append(0))
+            keyboard.on_press_key('home', lambda _: state.append(1))
             if end == 0:
                 return 0
             if state.count(0) > 0:
                 return 1
+            if state.count(1) > 0:
+                return 2
             time.sleep(1)
         x += 1
     sec_pos: tuple[int, int] = mouse.get_position()
@@ -177,8 +192,11 @@ while True:
     time.sleep(3)
     if is_live:
         while state.count(0) == 0:
-            z: int or None = stay_awake()
-            if z == 1:
+            sw_response: int or None = stay_awake()
+            if sw_response == 2:
+                set_close_schedule()
+                state.clear()
+            elif sw_response == 1:
                 end_response = easygui.buttonbox(
                     "Do you want to end the program or end the call?",
                     "HelperApp", ["End Program", "End Call", "Cancel"])
@@ -188,8 +206,9 @@ while True:
                     pass
                 else:
                     state.clear()
-            elif z == 0:
+            elif sw_response == 0:
                 state.append(0)
+        state.clear()
         print("Exiting program")
         time.sleep(2)
         if datetime.now().hour > 17:
