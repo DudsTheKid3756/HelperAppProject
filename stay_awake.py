@@ -135,9 +135,9 @@ def end_chat(hour=set_hour) -> int:
         time.sleep(1)
 
         if custom_message_response == "Custom Message":
-            custom_message = str(easygui.enterbox(
+            custom_message = easygui.enterbox(
                 "Enter your custom message here:",
-                "Custom Message"))
+                "Custom Message")
         time.sleep(2)
 
         if len(screeninfo.get_monitors()) == 1:
