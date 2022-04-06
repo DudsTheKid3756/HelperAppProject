@@ -1,3 +1,4 @@
+import os
 import random
 import getpass
 import sys
@@ -17,10 +18,16 @@ is_live = False  # bool to set for live app or testing
 state = []  # contains 0 if 'end' key is pressed
 file_paths = {
     "messages": f"C:/Users/{user}/Desktop/messages",
-    "scripts": f"C:/Users/{user}/Desktop/exit_scripts"
+    "scripts": f"C:/Users/{user}/Desktop/exit_scripts",
+    "logs": f"C:/Users/{user}/Desktop/logs"
 }
+os.mkdir(file_paths.get("logs")) if not os.path.isdir(file_paths.get("logs")) else None  # creates new log directory
+log_file = f"{file_paths.get('logs')}/log_{datetime.now().strftime('%B %d, %Y')}"
+new_file = open(log_file, 'a') \
+    if os.path.isfile(log_file) \
+    else open(log_file, 'x')
 custom_message: str = ""
-set_hour: int = 18  # default value for time to close chat
+set_hour: int = 20  # default value for time to close chat
 
 pyautogui.FAILSAFE = False
 num_min = 0
@@ -173,7 +180,7 @@ def stay_awake() -> int:
         x += 1
     sec_pos: tuple[int, int] = mouse.get_position()
     if abs(sec_pos[0] - first_pos[0]) < 50 and abs(sec_pos[1] - first_pos[1] < 50):
-        print("Movement made at: {}".format(datetime.now().strftime("%B %d, %Y - %H:%M:%S")))
+        new_file.write(f"Movement made at: {datetime.now().strftime('%B %d, %Y - %H:%M:%S')}\n")
         for i in range(0, 100):
             pyautogui.moveTo(0, i * 10)
         pyautogui.moveTo(1, 1)
@@ -213,4 +220,5 @@ while True:
         time.sleep(2)
         if datetime.now().hour > 17:
             ctypes.windll.user32.LockWorkStation()
+        new_file.close()
     exit(0)
