@@ -1,17 +1,18 @@
+import ctypes
+import getpass
 import os
 import random
-import getpass
 import sys
 import time
-import mouse
+from datetime import datetime
+
+import easygui
 import keyboard
-import screeninfo
+import mouse
 import pyautogui
 import pywinauto
-import ctypes
-import easygui
+import screeninfo
 from pywinauto.findwindows import find_windows
-from datetime import datetime
 
 user = getpass.getuser()  # gets current user of this Windows machine
 base_path = f"C:/Users/{user}/Desktop/"
