@@ -14,14 +14,13 @@ from pywinauto.findwindows import find_windows
 from datetime import datetime
 
 user = getpass.getuser()  # gets current user of this Windows machine
+base_path = f"C:/Users/{user}/Desktop/"
 is_live = False  # bool to set for live app or testing
-state = []  # contains 0 if 'end' key is pressed
-file_paths = {
-    "messages": f"C:/Users/{user}/Desktop/messages",
-    "scripts": f"C:/Users/{user}/Desktop/exit_scripts",
-    "logs": f"C:/Users/{user}/Desktop/logs",
-    "move_configs": f"C:/Users/{user}/Desktop/move_configs"
-}
+state = []  # used to determine which set of instructions to execute
+
+files = ['messages', 'exit_scripts', 'logs', 'move_configs']  # file/dir names to use as keys for dict
+file_paths = {file: f'{base_path}{file}' for file in files}  # dict of files/dirs needed from user desktop
+
 os.mkdir(file_paths.get("logs")) if not os.path.isdir(file_paths.get("logs")) else None  # creates new log directory
 log_file_name = f"{file_paths.get('logs')}/log_{datetime.now().strftime('%B %d, %Y')}"  # sets name of new log file
 log_file = open(log_file_name, 'a') \
@@ -34,7 +33,7 @@ move_configs = [
 ]  # adds all move config file names to a list
 
 custom_message: str = ""  # custom exit message
-set_hour: int = 20  # default value for time to close chat
+set_hour: int = 18  # default value for time to close chat
 
 pyautogui.FAILSAFE = False
 num_min = 0
@@ -79,7 +78,7 @@ messages: list[str] or None = read_file(
 # sets monitor variable to tuple of lists from 'exit_scripts' text file
 # first is for single monitor setup, second is for dual monitor setup
 monitors: list[str] or None = read_file(
-    file_paths.get("scripts"),
+    file_paths.get("exit_scripts"),
     (1, 8),
     (10, 17)
 )
