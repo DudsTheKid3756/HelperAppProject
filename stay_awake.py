@@ -23,13 +23,15 @@ file_paths = {
     "move_configs": f"C:/Users/{user}/Desktop/move_configs"
 }
 os.mkdir(file_paths.get("logs")) if not os.path.isdir(file_paths.get("logs")) else None  # creates new log directory
-log_file = f"{file_paths.get('logs')}/log_{datetime.now().strftime('%B %d, %Y')}"
-new_file = open(log_file, 'a') \
-    if os.path.isfile(log_file) \
-    else open(log_file, 'x')
+log_file_name = f"{file_paths.get('logs')}/log_{datetime.now().strftime('%B %d, %Y')}"  # sets name of new log file
+log_file = open(log_file_name, 'a') \
+    if os.path.isfile(log_file_name) \
+    else open(log_file_name, 'x')  # opens log file for current day or creates new one if it doesn't exist
 
-move_config_dir_len = len([name for name in os.listdir(file_paths.get('move_configs'))])
-move_configs = [f"{file_paths.get('move_configs')}/move_config_{i + 1}" for i in range(move_config_dir_len)]
+move_config_dir_len = len([name for name in os.listdir(file_paths.get('move_configs'))])  # length of move config dir
+move_configs = [
+    f"{file_paths.get('move_configs')}/move_config_{i + 1}" for i in range(move_config_dir_len)
+]  # adds all move config file names to a list
 
 custom_message: str = ""  # custom exit message
 set_hour: int = 20  # default value for time to close chat
@@ -50,6 +52,7 @@ def get_file_length(file: str) -> int:
 
 
 def get_config(rand_num: int) -> list[str]:
+    """gets contents of config file based on list index"""
     rand_config = move_configs[rand_num]
     config_length = get_file_length(rand_config)
     with open(rand_config) as rc:
@@ -195,7 +198,7 @@ def stay_awake() -> int:
         x += 1
     sec_pos: tuple[int, int] = mouse.get_position()
     if abs(sec_pos[0] - first_pos[0]) < 50 and abs(sec_pos[1] - first_pos[1] < 50):
-        new_file.write(f"Movement made at: {datetime.now().strftime('%B %d, %Y - %H:%M:%S')}\n")
+        log_file.write(f"Movement made at: {datetime.now().strftime('%B %d, %Y - %H:%M:%S')}\n")
         exec_list_items(get_config(random.randint(0, move_config_dir_len - 1)))
         pyautogui.moveTo(1, 1)
         for i in range(0, 4):
@@ -234,5 +237,5 @@ while True:
         time.sleep(2)
         if datetime.now().hour > 17:
             ctypes.windll.user32.LockWorkStation()
-        new_file.close()
+        log_file.close()
     exit(0)
