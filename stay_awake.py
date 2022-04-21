@@ -90,6 +90,9 @@ def exec_list_items(_list: list[str]) -> None:
         exec(item)
 
 
+e = exec_list_items
+
+
 def click_spot(x: int, y: int) -> None:
     """moves to spot on screen and clicks"""
     mouse.move(x, y)
@@ -142,7 +145,6 @@ def end_chat(hour=set_hour) -> int:
     """
     global custom_message
     if datetime.now().hour >= hour:
-        e = exec_list_items
         win_num = 0
         try:
             win_num = find_windows(best_match="Meet - New Hire 24/7 Meet")
