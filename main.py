@@ -19,8 +19,8 @@ base_path = f"C:/Users/{user}/Desktop/"
 is_live = False  # bool to set for live app or testing
 state = []  # used to determine which set of instructions to execute
 
-files = ['messages', 'exit_scripts', 'logs', 'move_configs']  # file/dir names to use as keys for dict
-file_paths = {file: f'{base_path}{file}' for file in files}  # dict of files/dirs needed from user desktop
+file_keys = ['messages', 'exit_scripts', 'logs', 'move_configs']  # file/dir names to use as keys for dict
+file_paths = {file: f'{base_path}{file}' for file in file_keys}  # dict of files/dirs needed from user desktop
 
 os.mkdir(file_paths.get("logs")) if not os.path.isdir(file_paths.get("logs")) else None  # creates new log directory
 log_file_name = f"{file_paths.get('logs')}/log_{datetime.now().strftime('%B %d, %Y')}"  # sets name of new log file
