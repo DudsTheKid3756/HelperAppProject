@@ -28,11 +28,19 @@ log_file = open(log_file_name, 'a') \
     if os.path.isfile(log_file_name) \
     else open(log_file_name, 'x')  # opens log file for current day or creates new one if it doesn't exist
 
-move_config_dir_len = len([name for name in os.listdir(file_paths.get('move_configs'))])  # length of move config dir
+default_config = "[pyautogui.moveTo(0, i * 10) for i in range(100)]"
+
+
+def get_dir_size(dir_path: str) -> int:
+    return len([name for name in os.listdir(dir_path)])
+
+
+move_config_dir_len = get_dir_size(file_paths.get('move_configs'))  # length of move config dir
 move_configs = [
     f"{file_paths.get('move_configs')}/move_config_{i + 1}" for i in range(move_config_dir_len)
 ]  # adds all move config file names to a list
 
+default_message = "Catch you guys later, bye!"
 custom_message: str = ""  # custom exit message
 set_hour: int = 18  # default value for time to close chat
 
@@ -107,7 +115,7 @@ def press_key(key: str) -> None:
     keyboard.press_and_release(key)
 
 
-def type_message(message: str) -> None:
+def type_message(message=default_message) -> None:
     """types out message"""
     time.sleep(2)
     print(message)
@@ -199,7 +207,10 @@ def stay_awake() -> int:
     sec_pos: tuple[int, int] = mouse.get_position()
     if abs(sec_pos[0] - first_pos[0]) < 50 and abs(sec_pos[1] - first_pos[1] < 50):
         log_file.write(f"Movement made at: {datetime.now().strftime('%B %d, %Y - %H:%M:%S')}\n")
-        exec_list_items(get_config(random.randint(0, move_config_dir_len - 1)))
+        if not os.path.isdir(file_paths.get("move_configs")) or get_dir_size(file_paths.get("move_configs")) == 0:
+            exec(default_config)
+        else:
+            exec_list_items(get_config(random.randint(0, move_config_dir_len - 1)))
         pyautogui.moveTo(1, 1)
         for i in range(0, 4):
             pyautogui.press("capslock")
