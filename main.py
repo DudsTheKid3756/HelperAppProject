@@ -19,7 +19,7 @@ base_path = f"C:/Users/{user}/Desktop/"
 is_live = False  # bool to set for live app or testing
 state = []  # used to determine which set of instructions to execute
 
-file_keys = ['messages', 'exit_scripts', 'logs', 'move_configs']  # file/dir names to use as keys for dict
+file_keys = ['messages', 'logs', 'move_configs']  # file/dir names to use as keys for dict
 file_paths = {file: f'{base_path}{file}' for file in file_keys}  # dict of files/dirs needed from user desktop
 
 os.mkdir(file_paths.get("logs")) if not os.path.isdir(file_paths.get("logs")) else None  # creates new log directory
@@ -87,7 +87,7 @@ messages: list[str] or None = read_file(
 # sets monitor variable to tuple of lists from 'exit_scripts' text file
 # first is for single monitor setup, second is for dual monitor setup
 monitors: list[str] or None = read_file(
-    file_paths.get("exit_scripts"),
+    f"C:/Users/{user}/Code/CatalyteUpScalingProjects/Python/HelperAppProject/exit_scripts",
     (1, 8),
     (10, 17)
 )

@@ -1,0 +1,17 @@
+1 Monitor:
+    click_spot(1749, 970)
+    time.sleep(3)
+    type_message(messages[random.randint(0, len(messages) - 1)] if custom_message == "" else custom_message)
+    time.sleep(2)
+    click_spot(1141, 975)
+    time.sleep(2)
+    press_key("ctrl+w")
+
+2 Monitors:
+    click_spot(1394, 1862)
+    time.sleep(3)
+    type_message(messages[random.randint(0, len(messages) - 1)] if custom_message == "" else custom_message)
+    time.sleep(2)
+    click_spot(922, 1861)
+    time.sleep(2)
+    press_key("ctrl+w")
