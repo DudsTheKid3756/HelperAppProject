@@ -87,7 +87,7 @@ messages: list[str] or None = read_file(
 # sets monitor variable to tuple of lists from 'exit_scripts' text file
 # first is for single monitor setup, second is for dual monitor setup
 monitors: list[str] or None = read_file(
-    f"C:/Users/{user}/Code/CatalyteUpScalingProjects/Python/HelperAppProject/exit_scripts",
+    "../HelperAppProject/exit_scripts",
     (1, 8),
     (10, 17)
 )
