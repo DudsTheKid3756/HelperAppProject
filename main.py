@@ -32,6 +32,7 @@ default_config = "[pyautogui.moveTo(0, i * 10) for i in range(100)]"
 
 
 def get_dir_size(dir_path: str) -> int:
+    """gets size of a directory; i.e. how many files are present within a directory"""
     return len([name for name in os.listdir(dir_path)])
 
 
@@ -45,11 +46,7 @@ custom_message: str = ""  # custom exit message
 set_hour: int = 18  # default value for time to close chat
 
 pyautogui.FAILSAFE = False
-num_min = 0
-if (len(sys.argv) < 2) or sys.argv[1].isalpha() or int(sys.argv[1]) < 1:
-    num_min = 3
-else:
-    num_min = int(sys.argv[1])
+num_min = 3 if (len(sys.argv) < 2) or sys.argv[1].isalpha() or int(sys.argv[1]) < 1 else int(sys.argv[1])
 
 
 def get_file_length(file: str) -> int:
@@ -142,7 +139,7 @@ def set_close_schedule() -> None:
     global set_hour
     hour: int = easygui.integerbox(
         "Input a time to end Google Meet (in hours):",
-        "Helper App", 18, 0, 24
+        "Helper App", set_hour, 0, 24
     )
     if hour is not None:
         set_hour = hour
