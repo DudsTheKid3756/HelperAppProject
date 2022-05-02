@@ -230,11 +230,11 @@ while True:
     time.sleep(3)
     if is_live:
         while state.count(0) == 0:
-            sw_response: int = stay_awake()
-            if sw_response == 2:
+            stay_awake_response: int = stay_awake()
+            if stay_awake_response == 2:
                 set_close_schedule()
                 state.clear()
-            elif sw_response == 1:
+            elif stay_awake_response == 1:
                 end_response = easygui.buttonbox(
                     "Do you want to end the program or end the call?",
                     "HelperApp", ["End Program", "End Call", "Cancel"])
@@ -244,7 +244,7 @@ while True:
                     pass
                 else:
                     state.clear()
-            elif sw_response == 0:
+            elif stay_awake_response == 0:
                 state.append(0)
         state.clear()
         print("Exiting program")
