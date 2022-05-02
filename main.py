@@ -184,6 +184,17 @@ def end_chat(hour=set_hour) -> int:
     return 1
 
 
+def state_switch(end_: int) -> int:
+    switcher = {
+        0: f"{end_} == 0",
+        1: "state.count(0) > 0",
+        2: "state.count(1) > 0"
+    }
+    for k, v in switcher.items():
+        if eval(v):
+            return k
+
+
 def stay_awake() -> int:
     """main script to move mouse if inactive for more than 3 minutes"""
     x = 0
@@ -193,13 +204,7 @@ def stay_awake() -> int:
             end: int = end_chat()
             keyboard.on_press_key('end', lambda _: state.append(0))
             keyboard.on_press_key('home', lambda _: state.append(1))
-            if end == 0:
-                return 0
-            if state.count(0) > 0:
-                return 1
-            if state.count(1) > 0:
-                return 2
-            time.sleep(1)
+            return state_switch(end) if True else time.sleep(1)
         x += 1
     sec_pos: tuple[int, int] = mouse.get_position()
     if abs(sec_pos[0] - first_pos[0]) < 50 and abs(sec_pos[1] - first_pos[1] < 50):
