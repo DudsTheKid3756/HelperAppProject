@@ -184,7 +184,8 @@ def end_chat(hour=set_hour) -> int:
     return 1
 
 
-def state_switch(end_: int) -> int:
+def state_check_switch(end_: int) -> int:
+    """switch to check state and end vars"""
     switcher = {
         0: f"{end_} == 0",
         1: "state.count(0) > 0",
@@ -204,7 +205,7 @@ def stay_awake() -> int:
             end: int = end_chat()
             keyboard.on_press_key('end', lambda _: state.append(0))
             keyboard.on_press_key('home', lambda _: state.append(1))
-            return state_switch(end) if True else time.sleep(1)
+            return state_check_switch(end) if True else time.sleep(1)
         x += 1
     sec_pos: tuple[int, int] = mouse.get_position()
     if abs(sec_pos[0] - first_pos[0]) < 50 and abs(sec_pos[1] - first_pos[1] < 50):
