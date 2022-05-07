@@ -14,6 +14,9 @@ import pywinauto
 import screeninfo
 from pywinauto.findwindows import find_windows
 
+pyautogui.FAILSAFE = False
+num_min = 3 if (len(sys.argv) < 2) or sys.argv[1].isalpha() or int(sys.argv[1]) < 1 else int(sys.argv[1])
+
 user = getpass.getuser()  # gets current user of this Windows machine
 base_path = f"C:/Users/{user}/Desktop/"
 is_live = False  # bool to set for live app or testing
@@ -44,9 +47,6 @@ move_configs = [
 default_message = "Catch you guys later, bye!"
 custom_message: str = ""  # custom exit message
 set_hour: int = 18  # default value for time to close chat
-
-pyautogui.FAILSAFE = False
-num_min = 3 if (len(sys.argv) < 2) or sys.argv[1].isalpha() or int(sys.argv[1]) < 1 else int(sys.argv[1])
 
 
 def get_file_length(file: str) -> int:
