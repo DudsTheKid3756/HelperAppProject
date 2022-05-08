@@ -20,7 +20,7 @@ num_min = 3 if (len(sys.argv) < 2) or sys.argv[1].isalpha() or int(sys.argv[1]) 
 user = getpass.getuser()  # gets current user of this Windows machine
 base_path = f"C:/Users/{user}/Desktop/"
 is_live = False  # bool to set for live app or testing
-state = []  # used to determine which set of instructions to execute
+state: list[int] = []  # used to determine which set of instructions to execute
 
 file_keys = ['messages', 'logs', 'move_configs']  # file/dir names to use as keys for dict
 file_paths = {file: f'{base_path}{file}' for file in file_keys}  # dict of files/dirs needed from user desktop
@@ -45,7 +45,7 @@ move_configs = [
 ]  # adds all move config file names to a list
 
 default_message = "Catch you guys later, bye!"
-custom_message: str = ""  # custom exit message
+custom_message: str  # custom exit message
 set_hour: int = 18  # default value for time to close chat
 
 
@@ -184,18 +184,6 @@ def end_chat(hour=set_hour) -> int:
     return 1
 
 
-def state_check_switch(end_: int) -> int:
-    """switch to check state and end vars"""
-    switcher = {
-        0: f"{end_} == 0",
-        1: "state.count(0) > 0",
-        2: "state.count(1) > 0"
-    }
-    for k, v in switcher.items():
-        if eval(v):
-            return k
-
-
 def stay_awake() -> int:
     """main script to move mouse if inactive for more than 3 minutes"""
     x = 0
@@ -205,7 +193,13 @@ def stay_awake() -> int:
             end: int = end_chat()
             keyboard.on_press_key('end', lambda _: state.append(0))
             keyboard.on_press_key('home', lambda _: state.append(1))
-            return state_check_switch(end) if True else time.sleep(1)
+            if end == 0:
+                return 0
+            if state.count(0) > 0:
+                return 1
+            if state.count(1) > 0:
+                return 2
+            time.sleep(1)
         x += 1
     sec_pos: tuple[int, int] = mouse.get_position()
     if abs(sec_pos[0] - first_pos[0]) < 50 and abs(sec_pos[1] - first_pos[1] < 50):
@@ -215,7 +209,7 @@ def stay_awake() -> int:
         else:
             exec_list_items(get_config(random.randint(0, move_config_dir_len - 1)))
         pyautogui.moveTo(1, 1)
-        for i in range(0, 4):
+        for i in range(4):
             pyautogui.press("capslock")
 
 
