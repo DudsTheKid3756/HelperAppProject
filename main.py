@@ -213,6 +213,38 @@ def stay_awake() -> int:
             pyautogui.press("capslock")
 
 
+def _schedule():
+    set_close_schedule()
+    state.clear()
+
+
+def _end():
+    end_response = easygui.buttonbox(
+        "Do you want to end the program or end the call?",
+        "HelperApp", ["End Program", "End Call", "Cancel"])
+    if end_response == "End Call":
+        end_chat(datetime.now().hour)
+    elif end_response == "End Program":
+        pass
+    else:
+        state.clear()
+
+
+def _close():
+    state.append(0)
+
+
+def stay_awake_response_switch(s_a_response: int):
+    switcher = {
+        0: _close,
+        1: _end,
+        2: _schedule
+    }
+
+    func = switcher.get(s_a_response)
+    func() if callable(func) else None
+
+
 # prompts user to set live or testing environment and executes stay_awake function if live
 while True:
     try:
@@ -225,21 +257,7 @@ while True:
     if is_live:
         while state.count(0) == 0:
             stay_awake_response: int = stay_awake()
-            if stay_awake_response == 2:
-                set_close_schedule()
-                state.clear()
-            elif stay_awake_response == 1:
-                end_response = easygui.buttonbox(
-                    "Do you want to end the program or end the call?",
-                    "HelperApp", ["End Program", "End Call", "Cancel"])
-                if end_response == "End Call":
-                    end_chat(datetime.now().hour)
-                elif end_response == "End Program":
-                    pass
-                else:
-                    state.clear()
-            elif stay_awake_response == 0:
-                state.append(0)
+            stay_awake_response_switch(stay_awake_response)
         state.clear()
         print("Exiting program")
         time.sleep(2)
